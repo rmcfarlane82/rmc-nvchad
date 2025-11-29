@@ -45,6 +45,7 @@ M.base46 = {
       ["@keyword"] = { fg = VS_PURPLE }, -- if/return/for…
       ["@keyword.modifier"] = { fg = VS_BLUE }, -- var/async/await/static
       ["@keyword.control"] = { fg = "#d8a0df" }, -- to mirror your LSP controlKeyword
+      ["@variable.member"] = { fg = VS_OFFWHITE },
     }
 
     local lua_specific = {
@@ -71,7 +72,12 @@ M.base46 = {
       ["@punctuation.bracket.typescript"] = { fg = VS_OFFWHITE },
     }
 
-    return vim.tbl_extend("force", base, lua_specific, ts_specific)
+    local py_specific = {
+      ["@variable.member.python"] = { fg = VS_OFFWHITE },
+      ["@function.method.call.python"] = { fg = VS_YELLOW },
+    }
+
+    return vim.tbl_extend("force", base, lua_specific, ts_specific, py_specific)
   end)(),
   -- hl_override = {
   -- 	Comment = { italic = true },
@@ -123,6 +129,14 @@ M.base46 = {
     ["@lsp.type.interface.typescript"] = { fg = VS_IFACE },
     ["@lsp.type.typeParameter.typescript"] = { fg = VS_TEAL },
     ["@lsp.type.enumMember.typescript"] = { fg = VS_OFFWHITE },
+
+    -- Python semantics
+    ["@variable.member.python"] = { fg = VS_OFFWHITE },
+    ["@function.method.call.python"] = { fg = VS_YELLOW },
+    ["@function.builtin.python"] = { fg = VS_BLUE },
+    ["@function.call.python"] = { fg = VS_YELLOW },
+    ["@module.python"] = { fg = VS_OFFWHITE },
+    ["@keyword.repeat.python"] = { fg = VS_PURPLE },
 
     NeoTreeDirectoryIcon = { fg = "#ffcf4a" },
     DevIconCs = { fg = "#00b600" },

@@ -13,6 +13,7 @@ local options = {
     jsonc = { "prettier" },
     html = { "prettier" },
     css = { "prettier" },
+    python = { "ruff_fix", "ruff_format" },
   },
 
   -- format_on_save = {

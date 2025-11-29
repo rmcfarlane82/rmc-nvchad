@@ -13,6 +13,7 @@ return  {
         "tsx",
         "json",
         "jsonc",
+        "python",
         "markdown",
         "markdown_inline",
 

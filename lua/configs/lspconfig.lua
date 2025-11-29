@@ -13,6 +13,7 @@ local server_modules = {
   "configs.lsp.eslint",
   "configs.lsp.emmet",
   "configs.lsp.roslyn",
+  "configs.lsp.python",
 }
 
 for _, module in ipairs(server_modules) do
@@ -32,6 +33,9 @@ local servers = {
   "jsonls",
   "eslint",
   "emmet_language_server",
+  "pyright",
+  "basedpyright",
+  "ruff_lsp",
 }
 vim.lsp.enable(servers)
 
