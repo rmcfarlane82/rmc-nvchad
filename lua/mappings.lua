@@ -39,6 +39,7 @@ local function close_buffer_keep_window()
     return
   end
 
+  ---@type integer|nil
   local target = vim.fn.bufnr "#"
   if not is_valid(target) then
     target = nil
@@ -104,11 +105,26 @@ map("n", "<C-e>", "<cmd>Neotree focus<CR>", { desc = "Neo-tree: Focus explorer" 
 -- Save file (works in all modes)
 --map({ "n", "i", "v" }, "<C-s>", "<cmd>w<CR><ESC>", { desc = "Save file" })
 
+-- Toggle absolute line numbers
+map("n", "<leader>ln", function()
+  vim.wo.number = not vim.wo.number
+end, { desc = "UI: Toggle absolute numbers" })
+
+-- Toggle relative line numbers (keeps absolute on so jumps still show)
+map("n", "<leader>lr", function()
+  vim.wo.number = true
+  vim.wo.relativenumber = not vim.wo.relativenumber
+end, { desc = "UI: Toggle relative numbers" })
+
+-- Show all WhichKey mappings
+map("n", "<leader>?", "<cmd>WhichKey<CR>", { desc = "WhichKey: Show all mappings" })
+
 ---------------------------------------------------------------------------
 -- Terminal Navigation
 ---------------------------------------------------------------------------
 -- Exit terminal mode
 map("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+map("t", "jk", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 
 -- Move between windows from terminal mode
 map("t", "<C-h>", [[<Cmd>wincmd h<CR>]], { desc = "Move to left window" })
@@ -173,6 +189,17 @@ map("n", "<F9>", dap.toggle_breakpoint, { desc = "DAP: Toggle breakpoint" })
 map("n", "<F10>", dap.step_over, { desc = "DAP: Step over" })
 map("n", "<F11>", dap.step_into, { desc = "DAP: Step into" })
 map("n", "<S-F11>", dap.step_out, { desc = "DAP: Step out" })
+map("n", "<F6>", function()
+  dap.terminate()
+end, { desc = "DAP: Stop debugging" })
+map("n", "<leader>da", function()
+  dap.run {
+    name = "Attach to .NET process",
+    type = "coreclr",
+    request = "attach",
+    processId = require("dap.utils").pick_process,
+  }
+end, { desc = "DAP: Attach to .NET process" })
 
 -- DAP session utilities
 map("n", "<leader>dr", dap.repl.open, { desc = "DAP: Open REPL" })

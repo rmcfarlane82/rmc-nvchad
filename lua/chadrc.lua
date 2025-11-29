@@ -44,6 +44,7 @@ M.base46 = {
     ["@keyword"] = { fg = VS_PURPLE }, -- if/return/for…
     ["@keyword.modifier"] = { fg = VS_BLUE }, -- var/async/await/static
     ["@keyword.control"] = { fg = "#d8a0df" }, -- to mirror your LSP controlKeyword
+
   },
   -- hl_override = {
   -- 	Comment = { italic = true },
@@ -93,6 +94,13 @@ M.base46 = {
     PmenuThumb = { bg = "#569Cd6" },
     NeoTreeCsharpProjectIcon = { fg = "#00b600" },
     NeoTreeSolutionIcon = { fg = VS_PURPLE },
+
+-- Flash.nvim highlights: bright labels + dimmed backdrop
+    FlashLabel = { fg = "#d4d4d4", bg = "#3a3a3a", bold = true },
+    FlashMatch = { fg = "#ff9e64", bg = "#3a3a3a", bold = true },
+    FlashCurrent = { fg = "#1e1e1e", bg = "#3a3a3a", bold = true },
+    FlashBackdrop = { fg = "#4a4a4a" },
+
   },
 }
 
@@ -115,7 +123,7 @@ M.ui = {
   },
   tabufline = {
     lazyload = false,
-  },
+  }
 }
 
 return M
