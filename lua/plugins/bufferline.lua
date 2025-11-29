@@ -1,3 +1,4 @@
+-- Configure bufferline.nvim for nicer buffer tabs with diagnostics
 return {
   "akinsho/bufferline.nvim",
   event = "VeryLazy",

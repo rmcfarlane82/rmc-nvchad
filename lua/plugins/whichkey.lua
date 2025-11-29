@@ -1,3 +1,4 @@
+-- WhichKey hints with minimal extras (marks/register popups disabled)
 return {
   "folke/which-key.nvim",
   event = "VeryLazy", -- or lazy = false

@@ -1,3 +1,4 @@
+-- Mason UI/registry setup plus ensure_installed tool list
 local mason = require("mason")
 
 mason.setup({

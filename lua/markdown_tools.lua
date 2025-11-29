@@ -1,3 +1,4 @@
+-- Helper functions for Markdown checkboxes + preview keymaps
 local M = {}
 
 local checkbox_cycle = {

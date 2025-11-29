@@ -1,3 +1,4 @@
+-- Telescope core + extensions for fuzzy finding and picker UX
 return {
   {
     "nvim-telescope/telescope.nvim",

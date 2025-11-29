@@ -1,3 +1,4 @@
+-- Auto-insert matching pairs and integrate with cmp for smoother TS-aware completions
 return {
   "windwp/nvim-autopairs",
   event = "InsertEnter",

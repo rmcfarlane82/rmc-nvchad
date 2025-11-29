@@ -1,3 +1,4 @@
+-- Core plugin spec extending NvChad defaults with formatter/LSP base setup
 return {
   {
     "stevearc/conform.nvim",

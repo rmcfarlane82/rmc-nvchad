@@ -1,3 +1,4 @@
+-- Manage NuGet packages inside Neovim (custom NeoNuGet integration)
 return {
   "MonsieurTib/neonuget",
   config = function()

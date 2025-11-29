@@ -1,3 +1,4 @@
+-- DAP core adapters/UI wiring for debugging workflows
 return {
   -- Core DAP
   {
@@ -34,4 +35,3 @@ return {
     end,
   },
 }
-

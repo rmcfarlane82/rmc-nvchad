@@ -1,3 +1,4 @@
+-- Formatter definitions routed through conform.nvim (Prettier, Stylua, etc.)
 local options = {
   formatters_by_ft = {
     lua = { "stylua" },

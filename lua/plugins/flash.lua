@@ -1,3 +1,4 @@
+-- Flash.nvim provides intuitive jump motions with better visuals
 return {
   "folke/flash.nvim",
   event = "VeryLazy",

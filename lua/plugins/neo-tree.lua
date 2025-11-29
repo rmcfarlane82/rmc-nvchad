@@ -1,3 +1,4 @@
+-- Configure Neo-tree file explorer behavior/look
 return {
   {
     "nvim-tree/nvim-tree.lua",

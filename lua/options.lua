@@ -1,3 +1,4 @@
+-- General Neovim options layered on NvChad defaults
 require "nvchad.options"
 
 -- add yours here!

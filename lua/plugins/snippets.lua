@@ -1,3 +1,4 @@
+-- Load VSCode-style snippets (friendly-snippets) for LuaSnip users
 return {
   {
     "rafamadriz/friendly-snippets",

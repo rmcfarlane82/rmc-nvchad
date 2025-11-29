@@ -1,3 +1,4 @@
+-- Markdown quality-of-life: Glow previews + Headlines styling
 return {
   {
     "ellisonleao/glow.nvim",

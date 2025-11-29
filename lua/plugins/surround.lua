@@ -1,3 +1,4 @@
+-- Add/change/delete surroundings via kylechui/nvim-surround
 return {
   "kylechui/nvim-surround",
   version = "*",

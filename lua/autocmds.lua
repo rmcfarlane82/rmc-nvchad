@@ -1,3 +1,4 @@
+-- Extend NvChad autocmds with terminal colors + Markdown-specific tweaks
 require "nvchad.autocmds"
 local markdown_tools = require "markdown_tools"
 if vim.loop.os_uname().version:match("Windows") then

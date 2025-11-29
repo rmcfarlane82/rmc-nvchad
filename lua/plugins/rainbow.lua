@@ -1,3 +1,4 @@
+-- Rainbow-delimiters setup for colorful nested bracket highlighting
 return {
   "HiPhish/rainbow-delimiters.nvim",
   event = "BufReadPost",

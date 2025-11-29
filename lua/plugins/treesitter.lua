@@ -1,3 +1,4 @@
+-- Treesitter parser management (ensure languages for dev stack)
 return  {
     "nvim-treesitter/nvim-treesitter",
     opts = {

@@ -1,3 +1,4 @@
+-- Auto-close/rename HTML & JSX-style tags using Treesitter awareness
 return {
   "windwp/nvim-ts-autotag",
   dependencies = { "nvim-treesitter/nvim-treesitter" },

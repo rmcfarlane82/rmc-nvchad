@@ -1,3 +1,4 @@
+-- Roslyn / Razor tooling integration for .NET development
 return {
     "seblyng/roslyn.nvim",
     ---@module 'roslyn.config'
@@ -70,4 +71,3 @@ return {
       })
     end,
   }
-
