@@ -1,4 +1,5 @@
 require "nvchad.autocmds"
+local markdown_tools = require "markdown_tools"
 if vim.loop.os_uname().version:match("Windows") then
   vim.opt.shell = "pwsh.exe"                     -- or "powershell.exe"
   vim.opt.shellcmdflag =
@@ -40,6 +41,36 @@ vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, { callback = set_term
 vim.api.nvim_create_autocmd("TermOpen", { callback = set_term_colors })
 
 set_term_colors()
+
+local markdown_group = vim.api.nvim_create_augroup("MarkdownTweaks", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  group = markdown_group,
+  pattern = { "markdown", "mdx", "md" },
+  callback = function(event)
+    local opts = vim.opt_local
+    opts.wrap = true
+    opts.linebreak = true
+    opts.spell = true
+    opts.spellcapcheck = ""
+    opts.spelloptions = { "camel" }
+    opts.conceallevel = 2
+    opts.colorcolumn = ""
+    opts.textwidth = 0
+    opts.tabstop = 2
+    opts.shiftwidth = 2
+    opts.softtabstop = 2
+    opts.expandtab = true
+    opts.swapfile = false
+    opts.signcolumn = "yes"
+    opts.list = false
+    vim.opt_local.formatoptions:append "t"
+    vim.opt_local.formatoptions:append "n"
+
+    vim.bo[event.buf].commentstring = "> %s"
+
+    markdown_tools.setup_buffer(event.buf)
+  end,
+})
 
 --vim.api.nvim_create_autocmd("BufDelete", {
 --  callback = function()

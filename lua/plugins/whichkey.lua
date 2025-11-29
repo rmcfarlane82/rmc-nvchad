@@ -3,6 +3,12 @@ return {
   event = "VeryLazy", -- or lazy = false
   opts = function()
     dofile(vim.g.base46_cache .. "whichkey")
-    return {}
+
+    return {
+      plugins = {
+        marks = false,
+        registers = false,
+      },
+    }
   end,
 }

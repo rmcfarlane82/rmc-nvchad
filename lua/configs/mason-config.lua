@@ -23,6 +23,9 @@ mason.setup({
       "typescript-language-server",
       "json-lsp",
       "rust-analyzer",
+      "marksman",
+      "markdownlint-cli2",
+      "glow",
 
       -- !
       "roslyn",

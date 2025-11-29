@@ -7,11 +7,12 @@ return  {
         "vimdoc",
         "html",
         "css",
+        "markdown",
+        "markdown_inline",
 
         "c_sharp",
         "razor",
       },
     },
   }
-
 
