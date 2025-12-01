@@ -14,11 +14,11 @@ o.tabstop = 4
 o.softtabstop = 4
 o.smartindent = true
 o.wrap = false
-o.guicursor = table.concat({
-    "n-v-c:block",       -- normal/visual/command: block
-    "i-ci-ve:ver25",     -- insert/cmd-line insert: vertical bar 25%
-    "t:ver25",           -- terminal-mode: vertical bar so terminal buffer insert matches
-    "r-cr:hor20",        -- replace modes: horizontal bar
-    "o:hor50",           -- operator-pending
-    "sm:block-blinkwait175-blinkoff150-blinkon175", -- showmatch
-  }, ",")
+--o.guicursor = table.concat({
+--  "n-v-c:block-Cursor", -- normal/visual/command: block uses Cursor highlight
+--  "i-ci-ve:ver25-lCursor", -- insert/cmd-line insert: vertical bar w/ lCursor colors
+--  "t:ver25-lCursor", -- terminal-mode cursor matches insert colors
+--  "r-cr:hor20-Cursor", -- replace modes: horizontal bar
+--  "o:hor50-Cursor", -- operator-pending
+--  "sm:block-blinkwait175-blinkoff150-blinkon175-Cursor", -- showmatch
+--}, ",")

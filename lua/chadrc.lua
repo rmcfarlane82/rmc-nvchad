@@ -5,76 +5,91 @@
 ---@type ChadrcConfig
 local M = {}
 -- VS Dark+ synced TS + LSP colors
-local VS_OFFWHITE = "#d4d4d4"
-local VS_BLUE = "#569cd6" -- your darker blue choice
-local VS_LBLUE = "#9cdcfe" -- light blue
-local VS_YELLOW = "#dcdcaa"
-local VS_TEAL = "#4ec9b0"
-local VS_ORANGE = "#ce9178"
-local VS_PGREEN = "#b5cea8"
-local VS_PURPLE = "#c586c0"
-local VS_IFACE = "#9ed6a2"
+local OFFWHITE = "#d4d4d4"
+local BLUE = "#89b4fa" -- match Catppuccin's blue accent
+local LBLUE = "#89dceb" -- light blue / sky
+local YELLOW = "#dcdcaa"
+local TEAL = "#4ec9b0"
+local ORANGE = "#fab387"
+local PGREEN = "#a6e3a1"
+local PURPLE = "#cba6f7"
+local IFACE = "#b4befe"
+--local RED = "#f38ba8"
+local PINK = "#f5c2e7"
+local RB_PINK = "#FF00FF"
+local RB_YELLOW = "#ffd866"
+local RB_BLUE = "#6cb6ff"
+local RB_ORANGE = "#ff8c42"
+local RB_GREEN = "#7ee787"
+local RB_VIOLET = "#d199ff"
+local RB_CYAN = "#5ce1e6"
+local COMMENT = "#6c7086"
+local BASE = "#1e1e2e"
+local SURFACE0 = "#45475a"
+local SURFACE1 = "#585b70"
 
 M.base46 = {
   theme = "default-dark",
   transparency = false,
   hl_override = (function()
     local base = {
-      ["@string"] = { fg = VS_ORANGE },
-      ["@number"] = { fg = VS_PGREEN },
-      ["@boolean"] = { fg = VS_PGREEN },
+      ["@string"] = { fg = ORANGE },
+      ["@number"] = { fg = PGREEN },
+      ["@boolean"] = { fg = PGREEN },
 
       -- functions / methods
-      ["@function"] = { fg = VS_YELLOW },
-      ["@function.method"] = { fg = VS_YELLOW },
-      ["@method.call"] = { fg = VS_YELLOW },
-      ["@constructor"] = { fg = VS_YELLOW },
+      ["@function"] = { fg = YELLOW },
+      ["@function.method"] = { fg = YELLOW },
+      ["@method.call"] = { fg = YELLOW },
+      ["@constructor"] = { fg = YELLOW },
 
       -- types / namespaces
-      ["@type"] = { fg = VS_TEAL }, -- classes/structs by default
-      ["@type.interface"] = { fg = VS_IFACE }, -- interfaces (TS supports this in c_sharp)
-      ["@namespace"] = { fg = VS_OFFWHITE }, -- match your LSP namespace color
+      ["@type"] = { fg = TEAL }, -- classes/structs by default
+      ["@type.interface"] = { fg = IFACE }, -- interfaces (TS supports this in c_sharp)
+      ["@namespace"] = { fg = OFFWHITE }, -- match your LSP namespace color
 
       -- identifiers
-      ["@variable"] = { fg = VS_LBLUE }, -- match LSP variable
-      ["@field"] = { fg = VS_OFFWHITE }, -- match LSP field
-      ["@property"] = { fg = VS_OFFWHITE }, -- match LSP property
-      ["@variable.parameter"] = { fg = VS_LBLUE }, -- match LSP parameter
+      ["@variable"] = { fg = LBLUE }, -- match LSP variable
+      ["@field"] = { fg = OFFWHITE }, -- match LSP field
+      ["@property"] = { fg = OFFWHITE }, -- match LSP property
+      ["@variable.parameter"] = { fg = LBLUE }, -- match LSP parameter
 
       -- keywords
-      ["@keyword"] = { fg = VS_PURPLE }, -- if/return/for…
-      ["@keyword.modifier"] = { fg = VS_BLUE }, -- var/async/await/static
-      ["@keyword.control"] = { fg = "#d8a0df" }, -- to mirror your LSP controlKeyword
-      ["@variable.member"] = { fg = VS_OFFWHITE },
+      ["@keyword"] = { fg = PURPLE }, -- if/return/for…
+      ["@keyword.modifier"] = { fg = BLUE }, -- var/async/await/static
+      ["@keyword.control"] = { fg = PINK }, -- to mirror your LSP controlKeyword
+      ["@variable.member"] = { fg = OFFWHITE },
+--      Cursor = { fg = BASE, bg = BLUE },
+--      lCursor = { fg = BASE, bg = LBLUE },
     }
 
     local lua_specific = {
-      ["@keyword.lua"] = { fg = VS_PURPLE },
-      ["@function.lua"] = { fg = VS_YELLOW },
-      ["@function.call.lua"] = { fg = VS_YELLOW },
-      ["@variable.lua"] = { fg = VS_LBLUE },
-      ["@variable.member.lua"] = { fg = VS_BLUE },
-      ["@string.lua"] = { fg = VS_ORANGE },
-      ["@number.lua"] = { fg = VS_PGREEN },
-      ["@boolean.lua"] = { fg = VS_PGREEN },
-      ["@comment.lua"] = { fg = "#6a9955" },
+      ["@keyword.lua"] = { fg = PURPLE },
+      ["@function.lua"] = { fg = YELLOW },
+      ["@function.call.lua"] = { fg = YELLOW },
+      ["@variable.lua"] = { fg = LBLUE },
+      ["@variable.member.lua"] = { fg = BLUE },
+      ["@string.lua"] = { fg = ORANGE },
+      ["@number.lua"] = { fg = PGREEN },
+      ["@boolean.lua"] = { fg = PGREEN },
+      ["@comment.lua"] = { fg = COMMENT },
     }
 
     local ts_specific = {
-      ["@keyword.javascript"] = { fg = VS_PURPLE },
-      ["@keyword.typescript"] = { fg = VS_PURPLE },
-      ["@type.typescript"] = { fg = VS_TEAL },
-      ["@type.interface.typescript"] = { fg = VS_IFACE },
-      ["@function.call.typescript"] = { fg = VS_YELLOW },
-      ["@property.typescript"] = { fg = VS_OFFWHITE },
-      ["@variable.typescript"] = { fg = VS_LBLUE },
-      ["@variable.member.typescript"] = { fg = VS_OFFWHITE },
-      ["@punctuation.bracket.typescript"] = { fg = VS_OFFWHITE },
+      ["@keyword.javascript"] = { fg = PURPLE },
+      ["@keyword.typescript"] = { fg = PURPLE },
+      ["@type.typescript"] = { fg = TEAL },
+      ["@type.interface.typescript"] = { fg = IFACE },
+      ["@function.call.typescript"] = { fg = YELLOW },
+      ["@property.typescript"] = { fg = OFFWHITE },
+      ["@variable.typescript"] = { fg = LBLUE },
+      ["@variable.member.typescript"] = { fg = OFFWHITE },
+      ["@punctuation.bracket.typescript"] = { fg = OFFWHITE },
     }
 
     local py_specific = {
-      ["@variable.member.python"] = { fg = VS_OFFWHITE },
-      ["@function.method.call.python"] = { fg = VS_YELLOW },
+      ["@variable.member.python"] = { fg = OFFWHITE },
+      ["@function.method.call.python"] = { fg = YELLOW },
     }
 
     return vim.tbl_extend("force", base, lua_specific, ts_specific, py_specific)
@@ -84,76 +99,76 @@ M.base46 = {
   -- 	["@comment"] = { italic = true },
   -- },
   hl_add = {
-    RainbowDelimiterRed = { fg = "#ffd700" },
-    RainbowDelimiterYellow = { fg = "#dcdcaa" },
-    RainbowDelimiterBlue = { fg = "#9cdcfe" },
-    RainbowDelimiterOrange = { fg = "#FFAC1C" },
-    RainbowDelimiterGreen = { fg = "#6a9955" },
-    RainbowDelimiterViolet = { fg = "#c586c0" },
-    RainbowDelimiterCyan = { fg = "#4ec9b0" },
+    RainbowDelimiterRed = { fg = RB_PINK },
+    RainbowDelimiterYellow = { fg = RB_YELLOW },
+    RainbowDelimiterBlue = { fg = RB_BLUE },
+    RainbowDelimiterOrange = { fg = RB_ORANGE },
+    RainbowDelimiterGreen = { fg = RB_GREEN },
+    RainbowDelimiterViolet = { fg = RB_VIOLET },
+    RainbowDelimiterCyan = { fg = RB_CYAN },
     -- C# semantics
-    ["@lsp.type.parameter.cs"] = { fg = VS_LBLUE },
-    ["@lsp.type.namespace.cs"] = { fg = VS_OFFWHITE },
-    ["@lsp.type.keyword.cs"] = { fg = VS_BLUE },
-    ["@lsp.type.extensionMethod.cs"] = { fg = VS_YELLOW },
-    ["@lsp.type.interface.cs"] = { fg = VS_IFACE },
-    ["@lsp.type.property.cs"] = { fg = VS_OFFWHITE },
-    ["@lsp.type.controlKeyword.cs"] = { fg = "#d8a0df" },
-    ["@lsp.type.field.cs"] = { fg = VS_OFFWHITE },
-    ["@lsp.type.variable.cs"] = { fg = VS_LBLUE },
-    ["@lsp.type.class.cs"] = { fg = VS_TEAL },
-    ["@lsp.typemod.constant.static.cs"] = { fg = VS_OFFWHITE },
-    ["@variable.member.c_sharp"] = { fg = VS_OFFWHITE },
-    ["@variable.c_sharp"] = { fg = VS_LBLUE },
-    ["@type.c_sharp"] = { fg = VS_TEAL },
-    ["@function.method.call.c_sharp"] = { fg = VS_YELLOW },
-    ["@attribute.c_sharp"] = { fg = VS_OFFWHITE },
-    ["@module.c_sharp"] = { fg = VS_OFFWHITE },
-    ["@type.builtin.c_sharp"] = { fg = VS_BLUE },
-    ["@keyword.exception.c_sharp"] = { fg = VS_PURPLE },
-    ["@keyword.modifier.c_sharp"] = { fg = VS_BLUE },
-    ["@keyword.type.c_sharp"] = { fg = VS_BLUE },
+    ["@lsp.type.parameter.cs"] = { fg = LBLUE },
+    ["@lsp.type.namespace.cs"] = { fg = OFFWHITE },
+    ["@lsp.type.keyword.cs"] = { fg = BLUE },
+    ["@lsp.type.extensionMethod.cs"] = { fg = YELLOW },
+    ["@lsp.type.interface.cs"] = { fg = IFACE },
+    ["@lsp.type.property.cs"] = { fg = OFFWHITE },
+    ["@lsp.type.controlKeyword.cs"] = { fg = PINK },
+    ["@lsp.type.field.cs"] = { fg = OFFWHITE },
+    ["@lsp.type.variable.cs"] = { fg = LBLUE },
+    ["@lsp.type.class.cs"] = { fg = TEAL },
+    ["@lsp.typemod.constant.static.cs"] = { fg = OFFWHITE },
+    ["@variable.member.c_sharp"] = { fg = OFFWHITE },
+    ["@variable.c_sharp"] = { fg = LBLUE },
+    ["@type.c_sharp"] = { fg = TEAL },
+    ["@function.method.call.c_sharp"] = { fg = YELLOW },
+    ["@attribute.c_sharp"] = { fg = OFFWHITE },
+    ["@module.c_sharp"] = { fg = OFFWHITE },
+    ["@type.builtin.c_sharp"] = { fg = BLUE },
+    ["@keyword.exception.c_sharp"] = { fg = PURPLE },
+    ["@keyword.modifier.c_sharp"] = { fg = BLUE },
+    ["@keyword.type.c_sharp"] = { fg = BLUE },
 
     -- Lua semantics
-    ["@lsp.type.variable.lua"] = { fg = VS_LBLUE },
-    ["@lsp.type.parameter.lua"] = { fg = VS_LBLUE },
-    ["@lsp.type.property.lua"] = { fg = VS_OFFWHITE },
-    ["@lsp.type.function.lua"] = { fg = VS_YELLOW },
-    ["@function.call.lua"] = { fg = VS_YELLOW },
-    ["@variable.member.lua"] = { fg = VS_BLUE },
+    ["@lsp.type.variable.lua"] = { fg = LBLUE },
+    ["@lsp.type.parameter.lua"] = { fg = LBLUE },
+    ["@lsp.type.property.lua"] = { fg = OFFWHITE },
+    ["@lsp.type.function.lua"] = { fg = YELLOW },
+    ["@function.call.lua"] = { fg = YELLOW },
+    ["@variable.member.lua"] = { fg = BLUE },
 
     -- TypeScript semantics
-    ["@lsp.type.parameter.typescript"] = { fg = VS_LBLUE },
-    ["@lsp.type.property.typescript"] = { fg = VS_OFFWHITE },
-    ["@lsp.type.variable.typescript"] = { fg = VS_LBLUE },
-    ["@lsp.type.interface.typescript"] = { fg = VS_IFACE },
-    ["@lsp.type.typeParameter.typescript"] = { fg = VS_TEAL },
-    ["@lsp.type.enumMember.typescript"] = { fg = VS_OFFWHITE },
+    ["@lsp.type.parameter.typescript"] = { fg = LBLUE },
+    ["@lsp.type.property.typescript"] = { fg = OFFWHITE },
+    ["@lsp.type.variable.typescript"] = { fg = LBLUE },
+    ["@lsp.type.interface.typescript"] = { fg = IFACE },
+    ["@lsp.type.typeParameter.typescript"] = { fg = TEAL },
+    ["@lsp.type.enumMember.typescript"] = { fg = OFFWHITE },
 
     -- Python semantics
-    ["@variable.member.python"] = { fg = VS_OFFWHITE },
-    ["@function.method.call.python"] = { fg = VS_YELLOW },
-    ["@function.builtin.python"] = { fg = VS_BLUE },
-    ["@function.call.python"] = { fg = VS_YELLOW },
-    ["@module.python"] = { fg = VS_OFFWHITE },
-    ["@keyword.repeat.python"] = { fg = VS_PURPLE },
+    ["@variable.member.python"] = { fg = OFFWHITE },
+    ["@function.method.call.python"] = { fg = YELLOW },
+    ["@function.builtin.python"] = { fg = BLUE },
+    ["@function.call.python"] = { fg = YELLOW },
+    ["@module.python"] = { fg = OFFWHITE },
+    ["@keyword.repeat.python"] = { fg = PURPLE },
 
-    NeoTreeDirectoryIcon = { fg = "#ffcf4a" },
-    DevIconCs = { fg = "#00b600" },
-    DevIconCSharpProject = { fg = "#ffffff" },
+    NeoTreeDirectoryIcon = { fg = RB_YELLOW },
+    DevIconCs = { fg = PGREEN },
+    DevIconCSharpProject = { fg = OFFWHITE },
 
-    Pmenu = { fg = "#D4D4D4", bg = "#2D2D30" },
-    PmenuSel = { fg = "#ffffff", bg = "#07AACC", bold = true },
-    PmenuSbar = { bg = "#333333" },
-    PmenuThumb = { bg = "#569Cd6" },
-    NeoTreeCsharpProjectIcon = { fg = "#00b600" },
-    NeoTreeSolutionIcon = { fg = VS_PURPLE },
+    Pmenu = { fg = OFFWHITE, bg = BASE },
+    PmenuSel = { fg = BASE, bg = BLUE, bold = true },
+    PmenuSbar = { bg = SURFACE0 },
+    PmenuThumb = { bg = SURFACE1 },
+    NeoTreeCsharpProjectIcon = { fg = PGREEN },
+    NeoTreeSolutionIcon = { fg = PURPLE },
 
 -- Flash.nvim highlights: bright labels + dimmed backdrop
-    FlashLabel = { fg = "#d4d4d4", bg = "#3a3a3a", bold = true },
-    FlashMatch = { fg = "#ff9e64", bg = "#3a3a3a", bold = true },
-    FlashCurrent = { fg = "#1e1e1e", bg = "#3a3a3a", bold = true },
-    FlashBackdrop = { fg = "#4a4a4a" },
+    FlashLabel = { fg = BASE, bg = PINK, bold = true },
+    FlashMatch = { fg = BASE, bg = PGREEN, bold = true },
+    FlashCurrent = { fg = BASE, bg = PGREEN, bold = true },
+    FlashBackdrop = { fg = SURFACE0 },
 
   },
 }
