@@ -1,8 +1,10 @@
 -- Lua language server tweaks so Neovim config formats correctly
+local capabilities = require("config.lsp.capabilities").capabilities
 local M = {}
 
 function M.setup()
   vim.lsp.config("lua_ls", {
+    capabilities = capabilities,
     settings = {
       Lua = {
         completion = {

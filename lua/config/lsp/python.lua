@@ -1,8 +1,10 @@
 -- Python language server configurations
+local capabilities = require("config.lsp.capabilities").capabilities
 local M = {}
 
 function M.setup()
   vim.lsp.config("pyright", {
+    capabilities = capabilities,
     settings = {
       python = {
         analysis = {
@@ -16,6 +18,7 @@ function M.setup()
   })
 
   vim.lsp.config("basedpyright", {
+    capabilities = capabilities,
     settings = {
       basedpyright = {
         analysis = {
@@ -28,6 +31,7 @@ function M.setup()
   })
 
   vim.lsp.config("ruff_lsp", {
+    capabilities = capabilities,
     settings = {
       args = {},
     },

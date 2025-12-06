@@ -1,4 +1,5 @@
 -- JSON language server configuration with SchemaStore integration
+local capabilities = require("config.lsp.capabilities").capabilities
 local M = {}
 
 function M.setup()
@@ -29,6 +30,7 @@ function M.setup()
   end
 
   vim.lsp.config("jsonls", {
+    capabilities = capabilities,
     settings = {
       json = {
         schemas = schema_list,

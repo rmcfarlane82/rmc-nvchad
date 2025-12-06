@@ -1,8 +1,10 @@
 -- TypeScript/JavaScript language server customizations (ts_ls)
+local capabilities = require("config.lsp.capabilities").capabilities
 local M = {}
 
 function M.setup()
   vim.lsp.config("ts_ls", {
+    capabilities = capabilities,
     filetypes = {
       "javascript",
       "javascriptreact",

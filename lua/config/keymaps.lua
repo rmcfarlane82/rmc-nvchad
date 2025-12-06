@@ -4,36 +4,46 @@ local keymap = Snacks.keymap.set
 
 line_numbers.setup()
 keymap("n", "<C-e>", function()
-  Snacks.explorer()
-end, { desc = "Open Snacks Explorer" })
+	Snacks.explorer()
+end, { desc = "Explorer" })
 
-keymap("n", ";", ":", { desc = "Enter command mode" })
+keymap("n", ";", ":", { desc = "Command mode", silent = false })
 keymap("n", "<C-t>", function()
-  Snacks.terminal()
-end, { desc = "Toggle Snacks Terminal" })
+	Snacks.terminal()
+end, { desc = "Terminal" })
+
+keymap({ "n", "v" }, "<Esc>", function()
+	vim.cmd.nohlsearch()
+	return "<Esc>"
+end, { expr = true, desc = "Clear search highlight" })
+
+keymap("t", "<C-t>", function()
+	Snacks.terminal()
+end, { desc = "Terminal (toggle from terminal mode)" })
 
 keymap("i", "jk", "<Esc>", { desc = "Leave insert mode" })
+keymap("v", "jk", "<Esc>", { desc = "Leave visual mode" })
 keymap("t", "jk", [[<C-\><C-n>]], { desc = "Leave terminal insert mode" })
+keymap("c", "jk", "<C-c>", { desc = "Leave command mode" })
 keymap("n", "<leader>ul", function()
-  line_numbers.cycle()
-end, { desc = "Cycle line number modes" })
-keymap("n", "<leader>bd", function()
-  Snacks.bufdelete()
-end, { desc = "Delete current buffer" })
-keymap("n", "<leader>z", function()
-  Snacks.zen()
-end, { desc = "Toggle Zen mode" })
-keymap("n", "<leader>Z", function()
-  Snacks.zen.zoom()
-end, { desc = "Toggle Zen zoom" })
+	line_numbers.cycle()
+end, { desc = "Line number modes" })
 keymap("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
 keymap("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
 keymap("n", "<C-k>", "<C-w>k", { desc = "Move to upper window" })
 keymap("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+keymap("n", "<C-n>", "<cmd>bnext<CR>", { desc = "Next buffer" })
+keymap("n", "<C-p>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
 
-keymap("n", "<leader>lf", function()                                                                                                                                                                                                                                         
-    vim.lsp.buf.format({ async = true })                                                                                                                                                                                                                                       
-  end, { desc = "Format file" })
+keymap("n", "<leader>lf", function()
+	vim.lsp.buf.format({ async = true })
+end, { desc = "Format file" })
+
+-- somewhere in your LSP setup
+--keymap({ "i", "n", "s" }, "<C-s>", "<Plug>(nvim.lsp.ctrl-s)", {
+--  silent = true,
+--  desc = "Cycle signature overload",
+--})
 -- Cycle through bufferline tabs with Ctrl+n / Ctrl+p
 --keymap("n", "<C-n>", "<cmd>BufferLineCycleNext<CR>", { desc = "Bufferline: Next buffer" })
 --keymap("n", "<C-p>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Bufferline: Previous buffer" })

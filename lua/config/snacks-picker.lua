@@ -2,6 +2,12 @@ local custom_vertical_preview_ratio = 0.75
 
 return {
   enabled = true,
+  exclude = { "bin", "obj", "node_modules", "dist", "build", ".git", ".venv" },
+  formatters = {
+    file = {
+      filename_first = true,
+    },
+  },
   win = {
     input = {
       keys = {
