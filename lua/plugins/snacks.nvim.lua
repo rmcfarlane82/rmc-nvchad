@@ -14,7 +14,19 @@ return {
 		-- or leave it empty to use the default settings
 		-- refer to the configuration section below
 		bigfile = { enabled = true },
-		dashboard = { enabled = true },
+		dashboard = {
+			enabled = true,
+			preset = {
+				header = [[
+███╗   ██╗███████╗██████╗ ██████╗
+████╗  ██║██╔════╝██╔══██╗██╔══██╗
+██╔██╗ ██║█████╗  ██████╔╝██║  ██║
+██║╚██╗██║██╔══╝  ██╔══██╗██║  ██║
+██║ ╚████║███████╗██║  ██║██████╔╝
+╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═════╝
+]],
+			},
+		},
 		explorer = explorer,
 		indent = { enabled = true },
 		input = { enabled = true },
@@ -193,6 +205,7 @@ return {
 		{ "<leader>fh", function() Snacks.picker.command_history() end,       desc = "Command History" },
 		{ "<leader>fn", function() Snacks.picker.notifications() end,         desc = "Notification History" },
 		{ "<leader>e",  function() Snacks.explorer() end,                     desc = "File Explorer" },
+		{ "<leader>fp", function() Snacks.picker.projects() end,              desc = "Projects" },
 
 		{ "<leader>bd", function() Snacks.bufdelete() end,                    desc = "Delete current buffer" },
 
@@ -206,5 +219,11 @@ return {
 		{ "gao",        function() Snacks.picker.lsp_outgoing_calls() end,    desc = "C[a]lls Outgoing" },
 		{ "<leader>ss", function() Snacks.picker.lsp_symbols() end,           desc = "LSP Symbols" },
 		{ "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
+
+		-- Github
+    { "<leader>gi", function() Snacks.picker.gh_issue() end, desc = "GitHub Issues (open)" },
+    { "<leader>gI", function() Snacks.picker.gh_issue({ state = "all" }) end, desc = "GitHub Issues (all)" },
+    { "<leader>gp", function() Snacks.picker.gh_pr() end, desc = "GitHub Pull Requests (open)" },
+    { "<leader>gP", function() Snacks.picker.gh_pr({ state = "all" }) end, desc = "GitHub Pull Requests (all)" },
 	},
 }

@@ -1,4 +1,4 @@
-local Snacks = require("snacks")
+local ok, Snacks = pcall(require, "snacks")
 local line_numbers = require("custom.line_numbers")
 local keymap = Snacks.keymap.set
 
@@ -38,6 +38,11 @@ keymap("n", "<C-p>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
 keymap("n", "<leader>lf", function()
 	vim.lsp.buf.format({ async = true })
 end, { desc = "Format file" })
+
+keymap("n", "<leader>mv", function()
+	require('render-markdown').toggle()
+end, { desc = "Markdown Preview" })
+
 
 -- somewhere in your LSP setup
 --keymap({ "i", "n", "s" }, "<C-s>", "<Plug>(nvim.lsp.ctrl-s)", {
