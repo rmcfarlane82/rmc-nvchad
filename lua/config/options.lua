@@ -16,6 +16,8 @@ opt.softtabstop = 4
 opt.smartindent = true
 opt.wrap = false
 opt.cmdheight = 0
+opt.ignorecase = true -- make searches (and flash.nvim) case-insensitive
+opt.smartcase = true -- keep capitals meaningful when searching
 
 local indent_group = vim.api.nvim_create_augroup("CustomIndent", { clear = true })
 
@@ -33,4 +35,3 @@ end
 
 set_indent({ "lua", "typescript", "typescriptreact" }, 2)
 set_indent({ "cs", "csharp" }, 4)
-

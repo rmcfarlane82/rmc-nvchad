@@ -100,7 +100,7 @@ return {
 					layout = { preset = "vertical" },
 				})
 			end,
-			desc = "Git Log"
+			desc = "Log"
 		},
 		{
 			"<leader>gb",
@@ -112,7 +112,7 @@ return {
 					end,
 				})
 			end,
-			desc = "Git Branches"
+			desc = "Branches"
 		},
 		{
 			"<leader>gL",
@@ -124,7 +124,7 @@ return {
 				}
 				)
 			end,
-			desc = "Git Log Line"
+			desc = "Log Line"
 		},
 		{
 			"<leader>gs",
@@ -135,9 +135,9 @@ return {
 					end,
 				})
 			end,
-			desc = "Git Status"
+			desc = "Status"
 		},
-		{ "<leader>gS", function() Snacks.picker.git_stash() end,             desc = "Git Stash" },
+		{ "<leader>gS", function() Snacks.picker.git_stash() end,                 desc = "Stash" },
 		{
 			"<leader>gd",
 			function()
@@ -148,7 +148,7 @@ return {
 				}
 				)
 			end,
-			desc = "Git Diff (Hunks)"
+			desc = "Diff (Hunks)"
 		},
 		{
 			"<leader>gf",
@@ -160,8 +160,14 @@ return {
 				}
 				)
 			end,
-			desc = "Git Log File"
+			desc = "Log File"
 		},
+
+		-- Github
+		{ "<leader>gi", function() Snacks.picker.gh_issue() end,                  desc = "Issues (open)" },
+		{ "<leader>gI", function() Snacks.picker.gh_issue({ state = "all" }) end, desc = "Issues (all)" },
+		{ "<leader>gp", function() Snacks.picker.gh_pr() end,                     desc = "Pull Requests (open)" },
+		{ "<leader>gP", function() Snacks.picker.gh_pr({ state = "all" }) end,    desc = "Pull Requests (all)" },
 
 
 
@@ -201,6 +207,7 @@ return {
 			end,
 			desc = "Buffers"
 		},
+		{ "<leader>fk", function() Snacks.picker.keymaps() end,               desc = "keymaps" },
 		{ "<leader>fg", function() Snacks.picker.grep() end,                  desc = "Grep" },
 		{ "<leader>fh", function() Snacks.picker.command_history() end,       desc = "Command History" },
 		{ "<leader>fn", function() Snacks.picker.notifications() end,         desc = "Notification History" },
@@ -217,13 +224,11 @@ return {
 		{ "gy",         function() Snacks.picker.lsp_type_definitions() end,  desc = "Goto T[y]pe Definition" },
 		{ "gaI",        function() Snacks.picker.lsp_incoming_calls() end,    desc = "C[a]lls Incoming" },
 		{ "gao",        function() Snacks.picker.lsp_outgoing_calls() end,    desc = "C[a]lls Outgoing" },
-		{ "<leader>ss", function() Snacks.picker.lsp_symbols() end,           desc = "LSP Symbols" },
-		{ "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
-
-		-- Github
-    { "<leader>gi", function() Snacks.picker.gh_issue() end, desc = "GitHub Issues (open)" },
-    { "<leader>gI", function() Snacks.picker.gh_issue({ state = "all" }) end, desc = "GitHub Issues (all)" },
-    { "<leader>gp", function() Snacks.picker.gh_pr() end, desc = "GitHub Pull Requests (open)" },
-    { "<leader>gP", function() Snacks.picker.gh_pr({ state = "all" }) end, desc = "GitHub Pull Requests (all)" },
+		{ "<leader>ls", function() Snacks.picker.lsp_symbols() end,           desc = "LSP Symbols" },
+		{ "<leader>lS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
+		{ "<leader>ld", function() Snacks.picker.diagnostics() end,           desc = "Workspace Diagnostics" },
+		{ "<leader>lD", function() Snacks.picker.diagnostics_buffer() end,    desc = "Buffer Diagnostics" },
+		{ "<Space>.",   function() vim.lsp.buf.code_action() end,             desc = "Code action" },
+		{ "<leader>lf", function() vim.lsp.buf.format({ async = true }) end,  desc = "Format file" },
 	},
 }

@@ -1,7 +1,11 @@
 return {
   "folke/flash.nvim",
   event = "VeryLazy",
-  opts = {},
+  opts = {
+    label = {
+      uppercase = false, -- only use lowercase labels/keys
+    },
+  },
   keys = {
     {
       "<leader>j",

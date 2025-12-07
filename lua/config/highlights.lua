@@ -4,6 +4,7 @@ local M         = {}
 
 -- VS Dark+ synced TS + LSP colors
 local OFFWHITE  = "#d4d4d4"
+local OFFWHITE1 = "#FFE4BC"
 local BLUE      = "#89b4fa" -- Catppuccin blue
 local LBLUE     = "#89dceb"
 local YELLOW    = "#dcdcaa"
@@ -151,6 +152,8 @@ local function apply()
 		["@keyword.repeat.python"]             = { fg = PURPLE },
 
 		-- Neo-tree / devicons
+		Directory                              = { fg = RB_YELLOW },
+		MiniIconsDirectory                     = { fg = RB_YELLOW },
 		NeoTreeDirectoryIcon                   = { fg = RB_YELLOW },
 		DevIconCs                              = { fg = PGREEN },
 		DevIconCSharpProject                   = { fg = OFFWHITE },
@@ -180,6 +183,17 @@ local function apply()
 		SnacksPickerBox = { link = "Normal" },
 		SnacksPickerBorder = { fg = SURFACE0 },
 		SnacksPickerTitle = { fg = OFFWHITE, bg = BASE },
+		SnacksPickerDirectory = { fg = OFFWHITE1 },
+	}
+
+	local blink = {
+		BlinkCmpDoc = { fg = OFFWHITE, bg = BASE },
+		BlinkCmpDocBorder = { fg = SURFACE0, bg = BASE },
+		BlinkCmpDocSeparator = { fg = SURFACE0, bg = BASE },
+		BlinkCmpDocCursorLine = { bg = SURFACE0 },
+		BlinkCmpSignatureHelp = { fg = OFFWHITE, bg = BASE },
+		BlinkCmpSignatureHelpBorder = { fg = SURFACE0, bg = BASE },
+		BlinkCmpGhostText = { fg = COMMENT, bg = BASE, italic = true },
 	}
 
 	local noice = {
@@ -209,6 +223,9 @@ local function apply()
 		hl(0, group, spec)
 	end
 	for group, spec in pairs(snacks_picker) do
+		hl(0, group, spec)
+	end
+	for group, spec in pairs(blink) do
 		hl(0, group, spec)
 	end
 	for group, spec in pairs(noice) do

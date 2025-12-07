@@ -35,9 +35,9 @@ keymap("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 keymap("n", "<C-n>", "<cmd>bnext<CR>", { desc = "Next buffer" })
 keymap("n", "<C-p>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
 
-keymap("n", "<leader>lf", function()
-	vim.lsp.buf.format({ async = true })
-end, { desc = "Format file" })
+keymap("n", "ge", function()
+	vim.diagnostic.jump({ count = 1, severity = { min = vim.diagnostic.severity.HINT } })
+end, { desc = "Next diagnostic" })
 
 keymap("n", "<leader>mv", function()
 	require('render-markdown').toggle()

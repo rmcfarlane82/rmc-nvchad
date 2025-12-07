@@ -12,6 +12,7 @@ return {
 	formatters = {
 		file = {
 			filename_first = true,
+			git_status_hl = false, -- keep folder/file colors stable; git signs still show
 		},
 	},
 
@@ -21,12 +22,6 @@ return {
 				-- your existing ones
 				["<Esc>"] = { "focus_list", mode = { "n", "i" } },
 				["jk"] = { "focus_list", mode = { "n", "i" } },
-
-				-- preview scrolling with Shift+hjkl
-				["J"] = { "preview_scroll_down", mode = { "i", "n" } },
-				["K"] = { "preview_scroll_up", mode = { "i", "n" } },
-				["H"] = { "preview_scroll_left", mode = { "i", "n" } },
-				["L"] = { "preview_scroll_right", mode = { "i", "n" } },
 			},
 		},
 	},

@@ -39,7 +39,6 @@ mason_tool_installer.setup({
 
     -- C#
     "roslyn",
-    "rzls",
   },
 
   -- nice defaults

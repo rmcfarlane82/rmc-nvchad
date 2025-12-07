@@ -10,6 +10,10 @@ return {
         suggestions = 20,
       },
     },
+    -- Limit triggers so jk escape mappings don't summon which-key
+    triggers = {
+      { "<auto>", mode = { "n", "v", "o" } },
+    },
     spec = {
       {
         mode = { "n", "v" },
