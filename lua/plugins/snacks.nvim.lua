@@ -1,8 +1,6 @@
 local scroll = require("config.snacks-scroll")
 local statuscolumn = require("config.snacks-statuscolumn")
 local picker = require("config.snacks-picker")
-local explorer = require("config.snacks-explorer")
-
 
 return {
 	"folke/snacks.nvim",
@@ -27,7 +25,7 @@ return {
 ]],
 			},
 		},
-		explorer = explorer,
+		explorer = { enabled = true },
 		indent = { enabled = true },
 		input = { enabled = true },
 		keymap = { enabled = true },
@@ -49,7 +47,6 @@ return {
 		dim = { enabled = true },
 		gitbrowse = { enabled = true },
 		lazygit = {
-
 			theme = {
 				[241]                      = { fg = "Special" },
 				activeBorderColor          = { fg = "LazyGitActiveBorder", bold = true },
@@ -247,10 +244,16 @@ return {
 		{ "<leader>lS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
 		{ "<leader>ld", function() Snacks.picker.diagnostics() end,           desc = "Workspace Diagnostics" },
 		{ "<leader>lD", function() Snacks.picker.diagnostics_buffer() end,    desc = "Buffer Diagnostics" },
-		{ "<Space>.",   function() vim.lsp.buf.code_action() end,             desc = "Code action" },
-		{ "<leader>lf", function() vim.lsp.buf.format({ async = true }) end,  desc = "Format file" },
+		{
+			"<Space>.",
+			function()
+				require("actions-preview").code_actions()
+			end,
+			desc = "Code action"
+		},
+		{ "<leader>lf", function() vim.lsp.buf.format({ async = true }) end, desc = "Format file" },
 
-		{ "]]",         function() Snacks.words.jump(1, true) end,            desc = "Next Reference" },
-		{ "[[",         function() Snacks.words.jump(-1, true) end,           desc = "Previous Reference" },
+		{ "]]",         function() Snacks.words.jump(1, true) end,           desc = "Next Reference" },
+		{ "[[",         function() Snacks.words.jump(-1, true) end,          desc = "Previous Reference" },
 	},
 }

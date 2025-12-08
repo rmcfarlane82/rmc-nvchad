@@ -6,7 +6,7 @@ return {
 	enabled = true,
 
 	-- Folders to ignore
-	exclude = { "bin", "obj", "node_modules", "dist", "build", ".git", ".venv" },
+--	exclude = {},
 
 	-- File name formatting
 	formatters = {

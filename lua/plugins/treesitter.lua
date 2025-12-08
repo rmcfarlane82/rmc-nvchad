@@ -19,6 +19,7 @@ return {
       "python",
       "markdown",
       "markdown_inline",
+			"diff",
 
       "c_sharp",
       "razor",
