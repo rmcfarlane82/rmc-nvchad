@@ -21,6 +21,9 @@ return {
 				scrollbar = false,
 			},
 		},
+		cmdline = {
+			sources = {},
+		},
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
 			per_filetype = {

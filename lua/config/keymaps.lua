@@ -1,4 +1,4 @@
-local ok, Snacks = pcall(require, "snacks")
+local Snacks = require("snacks")
 local line_numbers = require("custom.line_numbers")
 local keymap = Snacks.keymap.set
 
@@ -8,18 +8,11 @@ keymap("n", "<C-e>", function()
 end, { desc = "Explorer" })
 
 keymap("n", ";", ":", { desc = "Command mode", silent = false })
-keymap("n", "<C-t>", function()
-	Snacks.terminal()
-end, { desc = "Terminal" })
 
 keymap({ "n", "v" }, "<Esc>", function()
 	vim.cmd.nohlsearch()
 	return "<Esc>"
 end, { expr = true, desc = "Clear search highlight" })
-
-keymap("t", "<C-t>", function()
-	Snacks.terminal()
-end, { desc = "Terminal (toggle from terminal mode)" })
 
 keymap("i", "jk", "<Esc>", { desc = "Leave insert mode" })
 keymap("v", "jk", "<Esc>", { desc = "Leave visual mode" })

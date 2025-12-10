@@ -1,6 +1,21 @@
+local Snacks = require("snacks")
 local scroll = require("config.snacks-scroll")
 local statuscolumn = require("config.snacks-statuscolumn")
 local picker = require("config.snacks-picker")
+
+local function toggle_terminal(position, opts)
+	opts = opts or {}
+	local offset = opts.base or 0
+	return Snacks.terminal(nil, {
+		count = offset + vim.v.count1,
+		win = {
+			position = position,
+			height = opts.height,
+			width = opts.width,
+			border = opts.border,
+		},
+	})
+end
 
 return {
 	"folke/snacks.nvim",
@@ -62,6 +77,43 @@ return {
 		},
 	},
 	keys = {
+		{
+			"<C-t>",
+			function()
+				toggle_terminal("bottom", { height = 0.32 })
+			end,
+			desc = "Toggle terminal",
+			mode = "t",
+		},
+		{
+			"<C-t>",
+			function()
+				toggle_terminal("bottom", { height = 0.32 })
+			end,
+			desc = "Toggle terminal",
+		},
+		{
+			"<leader>tt",
+			function()
+				toggle_terminal("bottom", { height = 0.32 })
+			end,
+			desc = "Terminal split (use count for new)",
+		},
+		{
+			"<leader>tv",
+			function()
+				toggle_terminal("right", { base = 100, width = 0.4 })
+			end,
+			desc = "Terminal vertical split (use count for new)",
+		},
+		{
+			"<leader>tf",
+			function()
+				toggle_terminal("float", { base = 200, width = 0.9, height = 0.9, border = "rounded" })
+			end,
+			desc = "Terminal float (use count for new)",
+		},
+
 		{
 			"<leader>lh",
 			function()
@@ -189,7 +241,7 @@ return {
 		{
 			"<leader>ff",
 			function()
-				Snacks.picker.smart({
+				Snacks.picker.files({
 					layout = { preset = "ivy" },
 				})
 			end,
@@ -222,12 +274,24 @@ return {
 			end,
 			desc = "Buffers"
 		},
-		{ "<leader>fk", function() Snacks.picker.keymaps() end,               desc = "keymaps" },
-		{ "<leader>fg", function() Snacks.picker.grep() end,                  desc = "Grep" },
-		{ "<leader>fh", function() Snacks.picker.command_history() end,       desc = "Command History" },
-		{ "<leader>fn", function() Snacks.picker.notifications() end,         desc = "Notification History" },
-		{ "<leader>e",  function() Snacks.explorer() end,                     desc = "File Explorer" },
-		{ "<C-e>",      function() Snacks.explorer() end,                     desc = "File Explorer" },
+		{ "<leader>fk", function() Snacks.picker.keymaps() end,         desc = "keymaps" },
+		{ "<leader>fg", function() Snacks.picker.grep() end,            desc = "Grep" },
+		{ "<leader>fh", function() Snacks.picker.command_history() end, desc = "Command History" },
+		{ "<leader>fn", function() Snacks.picker.notifications() end,   desc = "Notification History" },
+		{
+			"<leader>e",
+			function()
+				Snacks.explorer({ layout = { preset = "default", preview = true } })
+			end,
+			desc = "File Explorer (ivy)",
+		},
+		{
+			"<C-e>",
+			function()
+				Snacks.explorer()
+			end,
+			desc = "File Explorer",
+		},
 		{ "<leader>fp", function() Snacks.picker.projects() end,              desc = "Projects" },
 
 		{ "<leader>bd", function() Snacks.bufdelete() end,                    desc = "Delete current buffer" },
