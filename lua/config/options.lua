@@ -19,6 +19,7 @@ opt.cmdheight = 0
 opt.ignorecase = true -- make searches (and flash.nvim) case-insensitive
 opt.smartcase = true -- keep capitals meaningful when searching
 opt.autoread = true
+opt.guicursor = "n-v-c:block,i-ci:ver25,t:ver25"
 
 vim.cmd [[autocmd FocusGained,BufEnter * checktime]]
 

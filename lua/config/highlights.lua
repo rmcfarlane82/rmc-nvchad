@@ -23,10 +23,17 @@ local RB_GREEN  = "#7ee787"
 local RB_VIOLET = "#d199ff"
 local RB_CYAN   = "#5ce1e6"
 
-local COMMENT   = "#6c7086"
+local COMMENT   = "#565656"
 local BASE      = "#1e1e2e"
 local SURFACE0  = "#45475a"
 local SURFACE1  = "#585b70"
+local RED       = "#f38ba8"
+local GREEN     = "#a6e3a1"
+local YELLOW2   = "#f9e2af"
+local BLUE2     = "#89b4fa"
+local MAGENTA   = "#cba6f7"
+local CYAN      = "#94e2d5"
+local WHITE     = "#ffffff"
 
 local function apply()
 	local hl = vim.api.nvim_set_hl
@@ -233,6 +240,14 @@ local function apply()
 	end
 	for group, spec in pairs(noice) do
 		hl(0, group, spec)
+	end
+
+	-- terminal palette (keeps shell ghost-text/predictions a dim grey)
+	local term_colors = {
+		[15] = COMMENT,
+	}
+	for i = 0, 15 do
+		vim.g["terminal_color_" .. i] = term_colors[i]
 	end
 end
 
