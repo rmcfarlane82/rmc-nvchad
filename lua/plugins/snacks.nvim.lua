@@ -252,7 +252,7 @@ return {
 				desc = "Smart Find Files"
 			},
 			{
-				"<C-b>",
+				"<leader>fb",
 				function()
 					Snacks.picker.buffers({
 						-- Focus the list so we don't auto-enter insert mode
