@@ -1,3 +1,30 @@
+local kind_icons = {
+	Text = "󰉿",
+	Method = "󰆧",
+	Function = "󰊕",
+	Constructor = "󰒓",
+	Field = "󰇽",
+	Variable = "󰫧",
+	Property = "󰜢",
+	Class = "󰠱",
+	Interface = "",
+	Struct = "󰙅",
+	Module = "󰅩",
+	Namespace = "󰅩",
+	Package = "󰏗",
+	Enum = "󰦑",
+	EnumMember = "󰦑",
+	Keyword = "󰌋",
+	Snippet = "󱄽",
+	Color = "󰏘",
+	File = "󰈙",
+	Reference = "󰈇",
+	Folder = "󰉋",
+	Event = "󰃭",
+	Operator = "󰆕",
+	TypeParameter = "󰊄",
+}
+
 return {
 	"saghen/blink.cmp",
 	version = "v0.*",
@@ -5,8 +32,8 @@ return {
 	opts = {
 		keymap = {
 			preset = "none",
-			["<C-n>"] = { 'select_next', 'fallback' },
-			["<C-p>"] = { "select_prev", "fallback" },
+			["<C-j>"] = { 'select_next', 'fallback' },
+			["<C-k>"] = { "select_prev", "fallback" },
 			["<CR>"] = { "accept", "fallback" },
 		},
 		snippets = {
@@ -27,7 +54,7 @@ return {
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
 			per_filetype = {
-				cs = { "lsp", "snippets", "snippets", "buffer" },
+				cs = { "lsp", "snippets", "buffer" },
 			},
 			providers = {
 				--lsp = {
@@ -51,7 +78,7 @@ return {
 			},
 			list = {
 				selection = {
-					preselect = false,
+					preselect = true,
 				},
 			},
 			documentation = {
@@ -64,7 +91,42 @@ return {
 				},
 			},
 			menu = {
-				draw = { treesitter = { "lsp" } },
+				draw = {
+					treesitter = { "lsp" },
+					-- show source column with per-source colors
+					columns = {
+						{ "kind_icon" },
+						{ "label", "label_description", gap = 1 },
+						{ "source_name" },
+					},
+					components = {
+						kind_icon = {
+							text = function(ctx)
+								local icon = kind_icons[ctx.kind] or ctx.kind_icon or ""
+								return icon .. (ctx.icon_gap or " ")
+							end,
+							highlight = function(ctx)
+								local kind = ctx.kind or ""
+								local group = "BlinkCmpKind" .. kind
+								return vim.fn.hlexists(group) == 1 and group or "BlinkCmpKind"
+							end,
+						},
+						source_name = {
+							text = function(ctx)
+								return ctx.source_name
+							end,
+							highlight = function(ctx)
+								local name = (ctx.source_name or ctx.source_id or ""):gsub("%W", "")
+								if name == "" then
+									return "BlinkCmpSource"
+								end
+								name = name:lower():gsub("^%l", string.upper)
+								local group = "BlinkCmpSource" .. name
+								return vim.fn.hlexists(group) == 1 and group or "BlinkCmpSource"
+							end,
+						},
+					},
+				},
 			},
 			ghost_text = {
 				enabled = true,
