@@ -311,9 +311,9 @@ return {
 			{
 				"<leader>e",
 				function()
-					Snacks.explorer({ layout = { preset = "default", preview = true } })
+					Snacks.explorer()
 				end,
-				desc = "File Explorer (ivy)",
+				desc = "File Explorer",
 			},
 			{
 				"<C-e>",

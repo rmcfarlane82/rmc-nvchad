@@ -24,6 +24,15 @@ return {
 			},
 		},
 	},
+	sources = {
+		explorer = {
+			layout = {
+				-- keep the preview hidden by default, but show it in the main editor window when toggled
+				preview = "main",
+				hidden = { "preview" },
+			},
+		},
+	},
 	layouts = {
 		vertical = {
 			config = function(layout)
