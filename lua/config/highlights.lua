@@ -177,12 +177,12 @@ local function apply()
 		PmenuThumb                             = { bg = SURFACE1 },
 
 		-- Flash.nvim
-		FlashLabel                             = { fg = BASE, bg = PINK, bold = true },
-		FlashMatch                             = { fg = BASE, bg = PGREEN, bold = true },
-		FlashCurrent                           = { fg = BASE, bg = PGREEN, bold = true },
+		FlashLabel                             = { fg = WHITE, bg = "#dd14cc", bold = true },
+		FlashMatch                             = { fg = "#000000", bg = "#dec014", bold = true },
+		FlashCurrent                           = { fg = "#000000", bg = "#dec014", bold = true },
 		FlashBackdrop                          = { fg = SURFACE0 },
 
-		WinSeparator                           = { fg = SURFACE0 },
+	--	WinSeparator                           = { fg = SURFACE0 },
 	}
 
 	local snacks_picker = {
