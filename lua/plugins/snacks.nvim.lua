@@ -254,7 +254,7 @@ return {
 						layout = { preset = "ivy" },
 					})
 				end,
-				desc = "Smart Find Files"
+				desc = "Find Files"
 			},
 			{
 				"<leader>fb",
