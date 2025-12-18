@@ -20,6 +20,8 @@ opt.ignorecase = true -- make searches (and flash.nvim) case-insensitive
 opt.smartcase = true -- keep capitals meaningful when searching
 opt.autoread = true
 opt.guicursor = "n-v-c:block,i-ci:ver25,t:ver25"
+opt.clipboard = "unnamedplus"
+
 
 vim.cmd [[autocmd FocusGained,BufEnter * checktime]]
 
@@ -39,3 +41,4 @@ end
 
 set_indent({ "lua", "typescript", "typescriptreact" }, 2)
 set_indent({ "cs", "csharp" }, 4)
+

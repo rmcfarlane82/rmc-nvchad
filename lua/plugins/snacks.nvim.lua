@@ -291,7 +291,17 @@ return {
 				desc = "Buffers"
 			},
 			{ "<leader>fk", function() Snacks.picker.keymaps() end,         desc = "keymaps" },
-			{ "<leader>fg", function() Snacks.picker.grep() end,            desc = "Grep" },
+			{
+				"<leader>fg",
+				function()
+					Snacks.picker.grep({
+						layout = {
+							preset = "ivy",
+						},
+					})
+				end,
+				desc = "Grep"
+			},
 			{ "<leader>fh", function() Snacks.picker.command_history() end, desc = "Command History" },
 			{ "<leader>fn", function() Snacks.picker.notifications() end,   desc = "Notification History" },
 			{ "<leader>fu", function() user_secrets.open_picker() end,      desc = "User Secrets" },
