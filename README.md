@@ -70,6 +70,12 @@ Picker keys (terminal picker):
 - `d`: delete the terminal buffer
 - `q`: close the picker
 
+## Screenshots
+
+![Home Screen](screenshots/home-screen.png)
+![C#](screenshots/c-sharp.png)
+![Buffers](screenshots/buffers.png)
+
 ## Notes
 
 Windows: you may need to install `fd` and `zig`.
