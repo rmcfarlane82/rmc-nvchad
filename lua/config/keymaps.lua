@@ -41,6 +41,7 @@ keymap("n", "<C-A-h>", ":vertical resize +2<CR>", { desc = "Expand vertical spli
 keymap("n", "<C-A-l>", ":vertical resize -2<CR>", { desc = "Shrink vertical split" })
 keymap("n", "<C-A-j>", ":resize +2<CR>", { desc = "Expand horizontal split" })
 keymap("n", "<C-A-k>", ":resize -2<CR>", { desc = "Shrink horizontal split" })
+keymap("n", "<leader>lr", ":LspRestart<CR>", { desc = "Lsp Restart" })
 
 -- somewhere in your LSP setup
 --keymap({ "i", "n", "s" }, "<C-s>", "<Plug>(nvim.lsp.ctrl-s)", {
