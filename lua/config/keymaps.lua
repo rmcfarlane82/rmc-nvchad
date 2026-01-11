@@ -42,6 +42,8 @@ keymap("n", "<leader>lr", function()
 	end
 end, { desc = "Restart LSP" })
 
+keymap("n", "<leader>rn", vim.lsp.buf.rename, { desc = "LSP rename" })
+
 keymap("n", "<leader>d", function()
 	vim.diagnostic.open_float(nil, { focus = true, scope = "cursor" })
 end, { desc = "Diagnostic float" })
