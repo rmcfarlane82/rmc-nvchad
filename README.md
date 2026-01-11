@@ -51,6 +51,8 @@ Leader key is space.
 - Clear search highlight: `<Esc>`
 - Exit insert/visual/terminal mode: `jk`
 - Next diagnostic: `ge`
+- Diagnostic float: `<leader>d`
+- Diagnostics picker: `<leader>D`
 - Lazygit: `<leader>ga` (requires `lazygit` installed)
 - Toggle markdown preview: `<leader>mv`
 - Window navigation: `<C-h>`, `<C-j>`, `<C-k>`, `<C-l>`

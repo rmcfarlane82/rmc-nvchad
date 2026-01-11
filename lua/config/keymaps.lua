@@ -42,9 +42,24 @@ keymap("n", "<leader>lr", function()
 	end
 end, { desc = "Restart LSP" })
 
-keymap("n", "<leader>lf", function()
+keymap("n", "<leader>d", function()
 	vim.diagnostic.open_float(nil, { focus = true, scope = "cursor" })
 end, { desc = "Diagnostic float" })
+
+keymap("n", "<leader>D", function()
+	Snacks.picker.diagnostics()
+end, { desc = "Workspace diagnostics" })
+
+keymap("n", "<leader>lv", function()
+	local current = vim.diagnostic.config().virtual_text
+	local enabled = current ~= false
+	vim.diagnostic.config({ virtual_text = not enabled })
+	vim.notify(
+		"Diagnostics virtual text " .. (enabled and "disabled" or "enabled"),
+		vim.log.levels.INFO,
+		{ title = "LSP" }
+	)
+end, { desc = "Diagnostics virtual text toggle" })
 
 -- Resize splits (Ctrl + Alt + direction)
 keymap("n", "<C-A-h>", ":vertical resize +2<CR>", { desc = "Expand vertical split" })
