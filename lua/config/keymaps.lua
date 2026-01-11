@@ -36,6 +36,16 @@ keymap("n", "<leader>mv", function()
 	require('render-markdown').toggle()
 end, { desc = "Markdown Preview" })
 
+keymap("n", "<leader>lr", function()
+	if vim.fn.exists(":LspRestart") == 2 then
+		vim.cmd("LspRestart")
+	end
+end, { desc = "Restart LSP" })
+
+keymap("n", "<leader>lf", function()
+	vim.diagnostic.open_float(nil, { focus = true, scope = "cursor" })
+end, { desc = "Diagnostic float" })
+
 -- Resize splits (Ctrl + Alt + direction)
 keymap("n", "<C-A-h>", ":vertical resize +2<CR>", { desc = "Expand vertical split" })
 keymap("n", "<C-A-l>", ":vertical resize -2<CR>", { desc = "Shrink vertical split" })
