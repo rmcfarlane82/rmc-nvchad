@@ -30,7 +30,7 @@ function M.setup()
     },
   })
 
-  vim.lsp.config("ruff_lsp", {
+  vim.lsp.config("ruff", {
     capabilities = capabilities,
     settings = {
       args = {},

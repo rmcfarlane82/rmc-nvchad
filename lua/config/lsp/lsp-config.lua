@@ -45,7 +45,7 @@ local servers = vim.list_extend(vim.deepcopy(default_servers), {
 	"emmet_language_server",
 	"pyright",
 	"basedpyright",
-	"ruff_lsp",
+	"ruff",
 	"lua_ls",
 })
 vim.lsp.enable(servers)
