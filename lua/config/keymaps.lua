@@ -45,7 +45,12 @@ end, { desc = "Restart LSP" })
 keymap("n", "<leader>rn", vim.lsp.buf.rename, { desc = "LSP rename" })
 
 keymap("n", "<leader>d", function()
-	vim.diagnostic.open_float(nil, { focus = true, scope = "cursor" })
+	local lnum = vim.api.nvim_win_get_cursor(0)[1] - 1
+	local opts = { focus = true, scope = "cursor" }
+	if vim.tbl_isempty(vim.diagnostic.get(0, { lnum = lnum })) then
+		opts.scope = "line"
+	end
+	vim.diagnostic.open_float(nil, opts)
 end, { desc = "Diagnostic float" })
 
 keymap("n", "<leader>D", function()
