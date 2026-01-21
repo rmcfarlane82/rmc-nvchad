@@ -84,3 +84,7 @@ keymap("n", "<leader>lr", ":LspRestart<CR>", { desc = "Lsp Restart" })
 --keymap("n", "<C-n>", "<cmd>BufferLineCycleNext<CR>", { desc = "Bufferline: Next buffer" })
 --keymap("n", "<C-p>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Bufferline: Previous buffer" })
 --keymap("n", "<leader>q", close_buffer_keep_window, { desc = "Close current buffer" })
+vim.keymap.set("n", "<leader>dt", function()
+    require("dotnet_tests").run_nearest_test()
+  end, { desc = "Run nearest dotnet test" })
+
