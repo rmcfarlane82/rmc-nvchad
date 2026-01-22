@@ -9,8 +9,11 @@ local state = {
   picker_cache = {
     version = -1,
     root = nil,
-    items = {},
+    nodes_by_id = {},
+    root_ids = {},
   },
+  picker_expanded = {},
+  last_status_by_fqn = {},
   explorer = {
     expanded_nodes = {},
     line_map = {},
@@ -28,6 +31,7 @@ local set_quickfix_items
 local combined_output
 local execute_dotnet_test
 local parse_trx_failed_tests
+local update_last_status_from_trx
 local relpath_from_root
 
 local run_dotnet_test
@@ -367,8 +371,8 @@ relpath_from_root = function(root, path)
   return vim.fn.fnamemodify(path, ":.")
 end
 
-local function run_project_tests(csproj_path, header_label)
-  run_dotnet_test(csproj_path, nil, header_label, "project", nil)
+local function run_project_tests(csproj_path, header_label, on_complete)
+  run_dotnet_test(csproj_path, nil, header_label, "project", nil, on_complete)
 end
 
 local function run_multiple_projects(csproj_paths, root)
@@ -418,6 +422,7 @@ local function run_multiple_projects(csproj_paths, root)
         any_failed = true
       end
 
+      update_last_status_from_trx(trx_path)
       local items = parse_trx_failed_tests(trx_path)
       if items and #items > 0 then
         vim.list_extend(combined_items, items)
@@ -787,6 +792,22 @@ local function build_project_tree(root, csproj)
   return total, namespace_list, entry
 end
 
+local function node_id_for_project(csproj)
+  return "project:" .. csproj
+end
+
+local function node_id_for_namespace(csproj, namespace)
+  return "namespace:" .. csproj .. ":" .. (namespace or "")
+end
+
+local function node_id_for_class(csproj, namespace, class_name)
+  return "class:" .. csproj .. ":" .. (namespace or "") .. ":" .. (class_name or "")
+end
+
+local function node_id_for_method(csproj, fqn)
+  return "method:" .. csproj .. ":" .. (fqn or "")
+end
+
 local function node_key(kind, csproj, namespace, class_name)
   if kind == "project" then
     return "project:" .. csproj
@@ -1033,88 +1054,151 @@ local function rebuild_test_index()
   index_test_projects(root, { rebuild_cache = true })
 end
 
-local function build_snacks_items_from_index(root)
+local status_icons = {
+  passed = "󰄬",
+  failed = "󰅚",
+  unknown = "󰘰",
+  running = "󰔟",
+}
+
+local kind_icons = {
+  project = "󰏗",
+  namespace = "󰌗",
+  class = "󰆧",
+  method = "󰊕",
+}
+
+local function status_icon(status)
+  return status_icons[status] or status_icons.unknown
+end
+
+local function kind_icon(kind)
+  return kind_icons[kind] or ""
+end
+
+local function status_hl(status)
+  if status == "passed" then
+    return "DotnetTestsStatusPassed"
+  end
+  if status == "failed" then
+    return "DotnetTestsStatusFailed"
+  end
+  if status == "running" then
+    return "DotnetTestsStatusRunning"
+  end
+  return "DotnetTestsStatusUnknown"
+end
+
+local function default_expanded_for_kind(kind)
+  if kind == "project" then
+    return true
+  end
+  if kind == "namespace" then
+    return false
+  end
+  if kind == "class" then
+    return false
+  end
+  return false
+end
+
+local function picker_node_expanded(node)
+  local expanded = state.picker_expanded[node.id]
+  if expanded == nil then
+    return default_expanded_for_kind(node.kind)
+  end
+  return expanded
+end
+
+local function build_picker_nodes_from_index(root)
   local cache = state.picker_cache
   if cache and cache.version == state.index_version and cache.root == root then
-    return cache.items
+    return cache.nodes_by_id, cache.root_ids
   end
 
-  local items = {}
+  local nodes_by_id = {}
+  local root_ids = {}
   local projects = get_cached_test_projects(root, false)
 
-  for project_index, csproj in ipairs(projects) do
-    local project_name = vim.fn.fnamemodify(csproj, ":t:r")
-    local total, namespaces = build_project_tree(root, csproj)
-    local project_item = {
-      text = string.format("[%s] %s", project_name, relpath_from_root(root, csproj)),
-      display = string.format("%s (%d)", relpath_from_root(root, csproj), total),
-      node_type = "project",
-      csproj = csproj,
-      tree = true,
-      last = project_index == #projects,
-    }
-    table.insert(items, project_item)
+  local function add_node(node)
+    nodes_by_id[node.id] = node
+    node.children = {}
+    if node.parent_id then
+      local parent = nodes_by_id[node.parent_id]
+      if parent then
+        table.insert(parent.children, node.id)
+      end
+    end
+  end
 
-    for ns_index, ns_node in ipairs(namespaces) do
+  for _, csproj in ipairs(projects) do
+    local project_label = "[" .. vim.fn.fnamemodify(csproj, ":t") .. "]"
+    local total, namespaces = build_project_tree(root, csproj)
+    local project_id = node_id_for_project(csproj)
+    add_node({
+      id = project_id,
+      kind = "project",
+      label = project_label,
+      depth = 0,
+      parent_id = nil,
+      csproj = csproj,
+      count = total,
+      text = relpath_from_root(root, csproj),
+    })
+    table.insert(root_ids, project_id)
+
+    for _, ns_node in ipairs(namespaces) do
       local ns_label = ns_node.name ~= "" and ns_node.name or "(global)"
-      local ns_item = {
-        text = string.format("[%s] %s", project_name, ns_node.name ~= "" and ns_node.name or "(global)"),
-        display = string.format("%s (%d)", ns_label, ns_node.count),
-        node_type = "namespace",
+      local ns_id = node_id_for_namespace(csproj, ns_node.name)
+      add_node({
+        id = ns_id,
+        kind = "namespace",
+        label = ns_label,
+        depth = 1,
+        parent_id = project_id,
         csproj = csproj,
         namespace = ns_node.name,
-        tree = true,
-        parent = project_item,
-        last = ns_index == #namespaces,
-      }
-      table.insert(items, ns_item)
+        count = ns_node.count,
+        text = ns_label,
+      })
 
-      for class_index, class_node in ipairs(ns_node.class_list) do
+      for _, class_node in ipairs(ns_node.class_list) do
         local class_label = class_node.name ~= "" and class_node.name or "(anonymous)"
         local class_fqn = class_node.name
         if ns_node.name and ns_node.name ~= "" then
           class_fqn = ns_node.name .. "." .. class_node.name
         end
-        local class_item = {
-          text = string.format("[%s] %s", project_name, class_fqn ~= "" and class_fqn or class_label),
-          display = string.format("%s (%d)", class_label, class_node.count),
-          node_type = "class",
+        local class_id = node_id_for_class(csproj, ns_node.name, class_node.name)
+        add_node({
+          id = class_id,
+          kind = "class",
+          label = class_label,
+          depth = 2,
+          parent_id = ns_id,
           csproj = csproj,
           namespace = ns_node.name,
           class = class_node.name,
           class_fqn = class_fqn,
-          fqns = vim.tbl_map(function(test)
-            return test.fqn
-          end, class_node.tests),
-          tree = true,
-          parent = ns_item,
-          last = class_index == #ns_node.class_list,
-        }
-        table.insert(items, class_item)
+          count = class_node.count,
+          text = class_fqn ~= "" and class_fqn or class_label,
+        })
 
-        for test_index, test in ipairs(class_node.tests) do
-          local scope = class_fqn ~= "" and class_fqn or class_label
-          local display = test.name
-          if test.path and test.line then
-            local rel = relpath_from_root(vim.fs.dirname(csproj), test.path)
-            display = string.format("%s  %s:%d", test.name, rel, test.line)
-          end
-          local test_item = {
-            text = string.format("[%s] %s::%s", project_name, scope, test.name),
-            display = display,
-            node_type = "test",
+        for _, test in ipairs(class_node.tests) do
+          local method_id = node_id_for_method(csproj, test.fqn)
+          add_node({
+            id = method_id,
+            kind = "method",
+            label = test.name,
+            depth = 3,
+            parent_id = class_id,
             csproj = csproj,
             fqn = test.fqn,
             file = test.path,
+            lnum = test.line,
             line = test.line,
-            tree = true,
-            parent = class_item,
-            last = test_index == #class_node.tests,
-          }
-          if test.line then
-            test_item.pos = { test.line, 0 }
-          end
-          table.insert(items, test_item)
+            pos = test.line and { test.line, 0 } or nil,
+            text = test.fqn or test.name,
+          })
         end
       end
     end
@@ -1123,9 +1207,99 @@ local function build_snacks_items_from_index(root)
   state.picker_cache = {
     version = state.index_version,
     root = root,
-    items = items,
+    nodes_by_id = nodes_by_id,
+    root_ids = root_ids,
   }
-  return items
+
+  return nodes_by_id, root_ids
+end
+
+local function aggregate_status(node_id, nodes_by_id, cache)
+  if cache[node_id] then
+    return cache[node_id]
+  end
+
+  local node = nodes_by_id[node_id]
+  if not node then
+    return "unknown"
+  end
+
+  if node.kind == "method" then
+    local status = state.last_status_by_fqn[node.fqn] or "unknown"
+    cache[node_id] = status
+    return status
+  end
+
+  local status = "unknown"
+  for _, child_id in ipairs(node.children or {}) do
+    local child_status = aggregate_status(child_id, nodes_by_id, cache)
+    if child_status == "failed" then
+      status = "failed"
+      break
+    end
+    if child_status == "passed" then
+      status = "passed"
+    end
+  end
+
+  cache[node_id] = status
+  return status
+end
+
+local function format_node_display(node, expanded, icon, status)
+  local indent = string.rep("  ", node.depth)
+  local kind = kind_icon(node.kind)
+  local parts = {}
+  if node.kind == "method" then
+    table.insert(parts, { indent })
+    table.insert(parts, { icon, status_hl(status) })
+    table.insert(parts, { " " .. kind .. " " .. node.label })
+    return parts, indent .. icon .. " " .. kind .. " " .. node.label
+  end
+  local chevron = expanded and "▾" or "▸"
+  local label = node.label
+  if node.count then
+    label = label .. " (" .. tostring(node.count) .. ")"
+  end
+  table.insert(parts, { indent .. chevron .. " " })
+  table.insert(parts, { icon, status_hl(status) })
+  table.insert(parts, { " " .. kind .. " " .. label })
+  return parts, indent .. chevron .. " " .. icon .. " " .. kind .. " " .. label
+end
+
+local function build_visible_nodes(root)
+  local nodes_by_id, root_ids = build_picker_nodes_from_index(root)
+  local visible = {}
+  local status_cache = {}
+
+  local function add_visible(node_id)
+    local node = nodes_by_id[node_id]
+    if not node then
+      return
+    end
+    local expanded = node.kind ~= "method" and picker_node_expanded(node) or false
+    local status = aggregate_status(node_id, nodes_by_id, status_cache)
+    local icon = status_icon(status)
+    local parts, display = format_node_display(node, expanded, icon, status)
+    local item = vim.tbl_extend("force", {}, node, {
+      display = display,
+      display_parts = parts,
+      expanded = expanded,
+    })
+    table.insert(visible, item)
+
+    if node.kind ~= "method" and expanded then
+      for _, child_id in ipairs(node.children or {}) do
+        add_visible(child_id)
+      end
+    end
+  end
+
+  for _, id in ipairs(root_ids) do
+    add_visible(id)
+  end
+
+  return visible
 end
 
 local function count_indexing_projects(root)
@@ -1138,6 +1312,47 @@ local function count_indexing_projects(root)
   return count
 end
 
+local function toggle_picker_node(picker, item, root)
+  if not item or item.kind == "method" then
+    return
+  end
+  local expanded = picker_node_expanded(item)
+  state.picker_expanded[item.id] = not expanded
+  if picker and not picker.closed then
+    picker:refresh()
+  else
+    open_tests_picker({ refresh = false, root = root })
+  end
+end
+
+local function set_picker_node_expanded(picker, item, root, expanded)
+  if not item or item.kind == "method" then
+    return
+  end
+  state.picker_expanded[item.id] = expanded
+  if picker and not picker.closed then
+    picker:refresh()
+  else
+    open_tests_picker({ refresh = false, root = root })
+  end
+end
+
+local function set_picker_expanded_all(root, expanded)
+  local nodes_by_id = build_picker_nodes_from_index(root)
+  for id, node in pairs(nodes_by_id) do
+    if node.kind ~= "method" then
+      state.picker_expanded[id] = expanded
+    end
+  end
+end
+
+local function ensure_picker_highlights()
+  vim.api.nvim_set_hl(0, "DotnetTestsStatusPassed", { link = "DiagnosticOk" })
+  vim.api.nvim_set_hl(0, "DotnetTestsStatusFailed", { link = "DiagnosticError" })
+  vim.api.nvim_set_hl(0, "DotnetTestsStatusUnknown", { link = "DiagnosticHint" })
+  vim.api.nvim_set_hl(0, "DotnetTestsStatusRunning", { link = "DiagnosticWarn" })
+end
+
 open_tests_picker = function(opts)
   local ok, Snacks = pcall(require, "snacks")
   if not ok or not Snacks or not Snacks.picker then
@@ -1146,13 +1361,16 @@ open_tests_picker = function(opts)
   end
 
   opts = opts or {}
-  local bufnr = vim.api.nvim_get_current_buf()
-  local bufname = vim.api.nvim_buf_get_name(bufnr)
-  local root
-  if bufname ~= "" and vim.bo[bufnr].buftype ~= "nofile" then
-    root = find_root(vim.fs.dirname(bufname))
-  else
-    root = state.explorer.root
+  ensure_picker_highlights()
+  local root = opts.root
+  if not root then
+    local bufnr = vim.api.nvim_get_current_buf()
+    local bufname = vim.api.nvim_buf_get_name(bufnr)
+    if bufname ~= "" and vim.bo[bufnr].buftype ~= "nofile" then
+      root = find_root(vim.fs.dirname(bufname))
+    else
+      root = state.explorer.root
+    end
   end
 
   if not root then
@@ -1176,22 +1394,20 @@ open_tests_picker = function(opts)
     title = title,
     prompt = "Select a test",
     finder = function()
-      return build_snacks_items_from_index(root)
+      return build_visible_nodes(root)
     end,
-    format = function(item, picker)
-      local ret = {}
-      if item.tree then
-        vim.list_extend(ret, Snacks.picker.format.tree(item, picker))
+    format = function(item)
+      if item.display_parts then
+        return item.display_parts
       end
-      table.insert(ret, { item.display or item.text })
-      return ret
+      return { { item.display or item.text } }
     end,
     focus = "list",
     auto_close = false,
     show_empty = true,
     layout = { preset = "sidebar" },
     sort = false,
-    matcher = { keep_parents = true, sort = false },
+    matcher = { sort = false },
     preview = function(ctx)
       local item = ctx.item
       if item and item.file then
@@ -1206,26 +1422,37 @@ open_tests_picker = function(opts)
         if not item then
           return
         end
-        if not picker.closed then
-          picker:close()
-        end
-        if item.node_type == "project" then
-          run_project_tests(item.csproj, "All tests in project: " .. item.csproj)
-        elseif item.node_type == "namespace" then
-          local namespace = item.namespace or ""
-          if namespace == "" then
-            run_project_tests(item.csproj, "Namespace: (global)")
-          else
-            local filter_expr = "FullyQualifiedName~" .. namespace
-            run_dotnet_test(item.csproj, filter_expr, "Namespace: " .. namespace, "namespace", nil)
-          end
-        elseif item.node_type == "class" then
-          local filter_expr, mode, note = build_filter_for_fqns(item.fqns or {}, item.class_fqn)
-          local label = "Class: " .. (item.class_fqn ~= "" and item.class_fqn or item.class or "(anonymous)")
-          run_dotnet_test(item.csproj, filter_expr, label, mode, note)
-        elseif item.node_type == "test" then
+        if item.kind == "method" then
           local filter_expr = "FullyQualifiedName=" .. item.fqn
-          run_dotnet_test(item.csproj, filter_expr, "Test: " .. item.fqn, "exact", nil)
+          run_dotnet_test(item.csproj, filter_expr, "Test: " .. item.fqn, "exact", nil, function()
+            if not picker.closed then
+              picker:refresh()
+            end
+          end)
+        end
+      end,
+      toggle_node = function(picker, item)
+        if not item or item.kind == "method" then
+          return
+        end
+        toggle_picker_node(picker, item, root)
+      end,
+      expand_node = function(picker, item)
+        set_picker_node_expanded(picker, item, root, true)
+      end,
+      collapse_node = function(picker, item)
+        set_picker_node_expanded(picker, item, root, false)
+      end,
+      expand_all = function(picker)
+        set_picker_expanded_all(root, true)
+        if not picker.closed then
+          picker:refresh()
+        end
+      end,
+      collapse_all = function(picker)
+        set_picker_expanded_all(root, false)
+        if not picker.closed then
+          picker:refresh()
         end
       end,
       open_file = function(picker, item)
@@ -1254,7 +1481,11 @@ open_tests_picker = function(opts)
           picker:close()
         end
         if item.csproj then
-          run_project_tests(item.csproj, "All tests in project: " .. item.csproj)
+          run_project_tests(item.csproj, "All tests in project: " .. item.csproj, function()
+            if not picker.closed then
+              picker:refresh()
+            end
+          end)
         end
       end,
       run_all_projects = function(picker)
@@ -1273,6 +1504,11 @@ open_tests_picker = function(opts)
       list = {
         keys = {
           ["<cr>"] = "confirm",
+          ["<space>"] = "toggle_node",
+          ["l"] = "expand_node",
+          ["h"] = "collapse_node",
+          ["E"] = "expand_all",
+          ["C"] = "collapse_all",
           ["o"] = "open_file",
           ["a"] = "run_file",
           ["p"] = "run_project",
@@ -1495,6 +1731,63 @@ local function build_trx_path()
   return vim.fn.tempname() .. ".trx"
 end
 
+local function parse_trx_test_results(trx_path)
+  local ok, lines = pcall(vim.fn.readfile, trx_path)
+  if not ok or not lines then
+    return {}
+  end
+
+  local content = table.concat(lines, "\n")
+  local results = {}
+  local id_to_fqn = {}
+
+  for block in content:gmatch("<UnitTest .-</UnitTest>") do
+    local id = block:match('id="([^"]+)"')
+    local class_name = block:match('className="([^"]+)"')
+    local name = block:match('name="([^"]+)"')
+    if id and class_name and name then
+      id_to_fqn[id] = class_name .. "." .. name
+    end
+  end
+
+  local function handle_result_block(block)
+    local outcome = block:match('outcome="([^"]+)"')
+    if outcome ~= "Passed" and outcome ~= "Failed" then
+      return
+    end
+    local test_name = block:match('testName="([^"]+)"')
+    local test_id = block:match('testId="([^"]+)"')
+    local fqn = (test_id and id_to_fqn[test_id]) or test_name
+    if not fqn or fqn == "" then
+      return
+    end
+    if outcome == "Passed" then
+      results[fqn] = "passed"
+    else
+      results[fqn] = "failed"
+    end
+  end
+
+  for block in content:gmatch("<UnitTestResult .-</UnitTestResult>") do
+    handle_result_block(block)
+  end
+  for block in content:gmatch("<UnitTestResult .-/>") do
+    handle_result_block(block)
+  end
+
+  return results
+end
+
+update_last_status_from_trx = function(trx_path)
+  local results = parse_trx_test_results(trx_path)
+  if not results then
+    return
+  end
+  for fqn, status in pairs(results) do
+    state.last_status_by_fqn[fqn] = status
+  end
+end
+
 parse_trx_failed_tests = function(trx_path)
   local ok, lines = pcall(vim.fn.readfile, trx_path)
   if not ok or not lines then
@@ -1596,7 +1889,7 @@ execute_dotnet_test = function(csproj, filter_expr, callback)
 end
 
 -- Run dotnet test with a FullyQualifiedName filter.
-run_dotnet_test = function(csproj, filter_expr, target_label, filter_mode, filter_note)
+run_dotnet_test = function(csproj, filter_expr, target_label, filter_mode, filter_note, on_complete)
   notify(vim.log.levels.INFO, "Running .NET tests...")
 
   execute_dotnet_test(csproj, filter_expr, function(obj, trx_path)
@@ -1621,6 +1914,10 @@ run_dotnet_test = function(csproj, filter_expr, target_label, filter_mode, filte
     set_results_content(buf, header, combined)
     open_results_split(buf)
 
+    update_last_status_from_trx(trx_path)
+    if on_complete then
+      on_complete()
+    end
     if obj.code == 0 then
       notify(vim.log.levels.INFO, "Tests passed")
     else
